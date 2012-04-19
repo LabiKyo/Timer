@@ -1,4 +1,5 @@
 $ ->
+  ###
   window.timer = new Timer 62000
   $el = $('#timer')
   timer
@@ -18,3 +19,5 @@ $ ->
   $('#stop').on 'click', (e) ->
     timer.stop()
     e.preventDefault()
+  ###
+  $('ul.nav.nav-list li:first a').tab('show')

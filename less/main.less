@@ -1,1 +1,33 @@
-@import "bootstrap.less"
+@import "bootstrap.less";
+
+.text-shadow () {
+  text-shadow: 1px 1px 1px @grayLight;
+}
+
+.hide {
+  display: none;
+}
+
+body {
+  background: url(../img/bg.png) repeat-x;
+  padding: 30px;
+}
+
+header, footer {
+  text-align: center;
+}
+
+header {
+  padding: 10px 0 30px;
+  h1 {
+    font-size: 44px;
+    .text-shadow();
+  }
+}
+
+.main-pane {
+  padding: 20px;
+  h2 {
+    text-align: center;
+  }
+}
