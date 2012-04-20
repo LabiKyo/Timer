@@ -7,20 +7,25 @@ window.timers =
     switch current.type
       when '1'
         current.$toggle.hasClass('active')
-      when '2'
-        '' # TODO
-      when '3'
+      when '2', '3'
         current[current.side].$toggle.hasClass('active')
 
   stop_current: ->
-    console.log 'stop current'
+    if window.timers.current_running()
+      window.timers.toggle_current()
+
+  start_current: ->
+    console.log 'start current'
+    unless window.timers.current_running()
+      window.timers.toggle_current()
+
+  toggle_current: ->
+    console.log 'toggle current'
     current = window.timers.current
     switch current.type
       when '1'
         current.$toggle.click()
-      when '2'
-        '' # TODO
-      when '3'
+      when '2', '3'
         current[current.side].$toggle.click()
 
   save_current: (timer, type, first_side) =>
@@ -28,6 +33,20 @@ window.timers =
     current = window.timers.current = timer
     current.type = type
     current.side = first_side
+
+  _side_matrix:
+    'pos': 'con'
+    'con': 'pos'
+
+  other_side: ->
+    if window.timers.type is '1'
+      return false
+    window.timers.current[window.timers._side_matrix[window.timers.current.side]]
+
+  change_side: =>
+    console.log 'change side'
+    current = window.timers.current
+    current.side = timers._side_matrix[current.side]
 
 get_label_from = ($btn) ->
   $btn.closest('.tab-pane').get(0).id
@@ -42,8 +61,17 @@ on_reset = (e) -> # reset button
   unless confirm '确定要重置时间么？'
     return
 
+  window.timers.stop_current()
   timer = get_timer_from($target)
-  timer.reset(timer.init_time)
+  switch window.timers.current.type
+    when '1'
+      timer.reset(timer.init_time)
+      timer.$toggle.removeClass('disabled')
+    when '2', '3'
+      timer.pos.reset(timer.pos.init_time)
+      timer.con.reset(timer.con.init_time)
+      timer.pos.$toggle.removeClass('disabled')
+      timer.con.$toggle.removeClass('disabled')
 
 on_toggle = (e) -> # toggle button
   #console.log 'on toggle'
@@ -108,7 +136,17 @@ on_update = (e) -> # timer update
   #console.log 'on update'
   @$el.html(@to_string())
   if @time is 0
-    @$toggle.click().addClass('disabled')
+    switch window.timers.current.type
+      when '1'
+        @$toggle.click().addClass('disabled')
+      when '2', '3'
+        other_side = window.timers.other_side()
+        if other_side.time is 0
+          @$toggle.click().addClass('disabled')
+        else
+          window.timers.stop_current()
+          window.timers.change_side()
+          window.timers.start_current()
   else if @time < 25600
     color = '#' + (~~((25600 - @time) / 100)).toString(16) + '0000'
     @$el.css('color', color)
@@ -117,12 +155,16 @@ on_update = (e) -> # timer update
 
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
+on_change = (e) ->
+  timers.stop_current()
+  timers.change_side()
+  timers.start_current()
+
 return_on_show_one = (init_time, label) ->
   #console.log 'return on show', init_time, label
   (e) ->
     console.log 'on show one', 'timers.current', timers.current, init_time, label
-    if timers.current_running()
-      timers.stop_current()
+    timers.stop_current()
     timers[label] ?= new Timer init_time
     timer = timers[label]
     timers.save_current timer, '1'
@@ -139,8 +181,7 @@ return_on_show_two = (init_time, label) ->
   #console.log 'return on show', init_time, label
   (e) ->
     console.log 'on show two', 'timers.current', timers.current, init_time, label
-    if timers.current_running()
-      timers.stop_current()
+    timers.stop_current()
     timers[label] ?= new Timer init_time
     timer = timers[label]
     timers.save_current timer, '2'
@@ -157,8 +198,7 @@ return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
   #console.log 'return on show', init_time, label
   (e) ->
     console.log 'on show three', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
-    if timers.current_running()
-      timers.stop_current()
+    timers.stop_current()
     timers[label] ?=
       pos: new Timer init_time_pos
       con: new Timer init_time_con
@@ -239,6 +279,7 @@ $ ->
     .on('click', '.btn.reset', on_reset)
     .on('click', '.btn.next', on_next)
     .on('click', '.btn.previous', on_previous)
+    .on('click', '.btn.change', on_change)
 
   # init view
   init_view_one
@@ -280,13 +321,6 @@ $ ->
     single_time_pos: 30 * 1000 # 30 second
     first_side: 'con'
 
-  init_view_three
-    title: '自由辩论'
-    label: '3'
-    init_time_pos: 5 * 60 * 1000 # 5 min
-    init_time_con: 5 * 60 * 1000 # 5 min
-    first_side: 'pos'
-
   init_view_one
     title: '正方三辩攻辩小结'
     label: 'pos-2-2'
@@ -296,6 +330,15 @@ $ ->
     title: '反方三辩攻辩小结'
     label: 'con-2-2'
     init_time: 1.5 * 60 * 1000 # 1.5 min
+
+  init_view_three
+    title: '自由辩论'
+    label: '3'
+    #init_time_pos: 2 * 1000 # 5 min
+    #init_time_con: 2 * 1000 # 5 min
+    init_time_pos: 5 * 60 * 1000 # 5 min
+    init_time_con: 5 * 60 * 1000 # 5 min
+    first_side: 'pos'
 
   init_view_one
     title: '正方四辩总结陈词'
