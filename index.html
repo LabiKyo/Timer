@@ -34,28 +34,6 @@
         </ul>
       </nav>
       <div class="span8 tab-content main-pane">
-
-        <section class="tab-pane" id="pos-2-1">
-          <h2>正方二辩盘问反方一辩</h2>
-          <div class="operations clearfix">
-            <a href="#" class="next btn btn-large btn-info">下一阶段</a>
-          </div>
-        </section>
-
-        <section class="tab-pane" id="con-2-1">
-          <h2>正方二辩盘问反方一辩</h2>
-          <div class="operations clearfix">
-            <a href="#" class="next btn btn-large btn-info">下一阶段</a>
-          </div>
-        </section>
-
-        <section class="tab-pane" id="3">
-          <h2>正方二辩盘问反方一辩</h2>
-          <div class="operations clearfix">
-            <a href="#" class="next btn btn-large btn-info">下一阶段</a>
-          </div>
-        </section>
-
       </div>
     </div>
   </section>
@@ -64,6 +42,36 @@
     Author: <a href="mailto:labikyo@gmail.com" rel="author" title="labikyo@gmail.com">Labi Kyo</a>
   </footer>
   <script type="text/template" id="tab-pane-type-one">
+    <section class="tab-pane" id="<%- label %>">
+      <h2><%- title %></h2>
+      <h3 class="timer hero-unit"></h3>
+      <div class="progress progress-striped active">
+        <div class="bar"></div>
+      </div>
+      <div class="operations clearfix">
+        <a href="#" class="previous btn btn-large btn-info<% if (!previous) { %> hide<% } %>"><i class="icon-chevron-left"></i> 上一阶段</a>
+        <a href="#" class="toggle btn btn-large btn-primary" data-toggle="button"><i class="icon-play"></i> 开始</a>
+        <a href="#" class="reset btn btn-large btn-inverse"><i class="icon-repeat"></i> 重置时间</a>
+        <a href="#" class="next btn btn-large btn-info<% if (!next) { %> hide<% } %>">下一阶段 <i class="icon-chevron-right"></i></a>
+      </div>
+    </section>
+  </script>
+  <script type="text/template" id="tab-pane-type-two">
+    <section class="tab-pane" id="<%- label %>">
+      <h2><%- title %></h2>
+      <h3 class="timer hero-unit"></h3>
+      <div class="progress progress-striped active">
+        <div class="bar"></div>
+      </div>
+      <div class="operations clearfix">
+        <a href="#" class="previous btn btn-large btn-info<% if (!previous) { %> hide<% } %>"><i class="icon-chevron-left"></i> 上一阶段</a>
+        <a href="#" class="toggle btn btn-large btn-primary" data-toggle="button"><i class="icon-play"></i> 开始</a>
+        <a href="#" class="reset btn btn-large btn-inverse"><i class="icon-repeat"></i> 重置时间</a>
+        <a href="#" class="next btn btn-large btn-info<% if (!next) { %> hide<% } %>">下一阶段 <i class="icon-chevron-right"></i></a>
+      </div>
+    </section>
+  </script>
+  <script type="text/template" id="tab-pane-type-three">
     <section class="tab-pane" id="<%- label %>">
       <h2><%- title %></h2>
       <h3 class="timer hero-unit"></h3>

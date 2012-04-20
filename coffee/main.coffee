@@ -84,6 +84,31 @@ init_view_one = (options = default_options_one) ->
   options.$container.append template(options)
   $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
 
+default_options_two =
+  $container: $('.main-pane')
+  previous: true
+  next: true
+
+init_view_two = (options = default_options_two) ->
+  options = _.extend(_.clone(default_options_two), options)
+  unless options.label? and options.title?
+    return false
+  template = _.template($('#tab-pane-type-two').html())
+  options.$container.append template(options)
+  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
+
+default_options_three =
+  $container: $('.main-pane')
+  previous: true
+  next: true
+
+init_view_three = (options = default_options_three) ->
+  options = _.extend(_.clone(default_options_three), options)
+  unless options.label? and options.title?
+    return false
+  template = _.template($('#tab-pane-type-three').html())
+  options.$container.append template(options)
+  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
 
 $ ->
   # binding
@@ -100,6 +125,11 @@ $ ->
     init_time: 3 * 60 * 1000 # 3 min
 
   init_view_one
+    title: '反方二辩盘问正方一辩'
+    label: 'con-1-2'
+    init_time: 2 * 60 * 1000 # 2 min
+
+  init_view_one
     title: '反方一辩破题立论'
     label: 'con-1-1'
     init_time: 3 * 60 * 1000 # 3 min
@@ -109,10 +139,30 @@ $ ->
     label: 'pos-1-2'
     init_time: 2 * 60 * 1000 # 2 min
 
-  init_view_one
-    title: '反方二辩盘问正方一辩'
-    label: 'con-1-2'
-    init_time: 2 * 60 * 1000 # 2 min
+  init_view_two
+    title: '正方三辩攻辩反方一、二、四辩'
+    label: 'pos-2-1'
+    init_time_pos: 60 * 1000 # 1 min
+    single_time_pos: 20 * 1000 # 20 second
+    init_time_con: 1.5 * 60 * 1000 # 1.5 min
+    single_time_con: 30 * 1000 # 30 second
+    first_side: 'pos'
+
+  init_view_two
+    title: '反方三辩攻辩正方一、二、四辩'
+    label: 'con-2-1'
+    init_time_con: 60 * 1000 # 1 min
+    single_time_con: 20 * 1000 # 20 second
+    init_time_pos: 1.5 * 60 * 1000 # 1.5 min
+    single_time_pos: 30 * 1000 # 30 second
+    first_side: 'con'
+
+  init_view_three
+    title: '自由辩论'
+    label: '3'
+    init_time_pos: 5 * 60 * 1000 # 5 min
+    init_time_con: 5 * 60 * 1000 # 5 min
+    first_side: 'pos'
 
   init_view_one
     title: '正方三辩攻辩小结'
