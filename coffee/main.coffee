@@ -1,6 +1,9 @@
 on_toggle = (e) -> # toggle button
   #console.log 'on toggle'
+  e.preventDefault()
   $target = $(e.target)
+  if $target.hasClass('disabled') # timeout
+    return
   label = $target.closest('.tab-pane').get(0).id
   timer = window.timers[label]
   if $target.hasClass('active')
@@ -10,11 +13,18 @@ on_toggle = (e) -> # toggle button
     $target.html('暂停')
     timer.start()
   $target.toggleClass('active')
-  e.preventDefault()
 
 on_update = (e) -> # timer update
   #console.log 'on update'
   @$el.html(@to_string())
+  if @time is 0
+    @$toggle.click().addClass('disabled')
+  else if @time < 25600
+    color = '#' + (~~((25600 - @time) / 100)).toString(16) + '0000'
+    @$el.css('color', color)
+  else
+    @$el.css('color', '#000')
+
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
 return_on_show = (init_time, label) ->
@@ -27,6 +37,7 @@ return_on_show = (init_time, label) ->
       label: label
       $el: $("##{label} .timer")
       $progress: $("##{label} .progress .bar")
+      $toggle: $("##{label} .btn.toggle")
     timer
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
