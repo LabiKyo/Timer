@@ -10,7 +10,7 @@ window.timers =
       when '2'
         '' # TODO
       when '3'
-        '' # TODO
+        current[current.side].$toggle.hasClass('active')
 
   stop_current: ->
     console.log 'stop current'
@@ -21,7 +21,7 @@ window.timers =
       when '2'
         '' # TODO
       when '3'
-        '' # TODO
+        current[current.side].$toggle.click()
 
   save_current: (timer, type, first_side) =>
     console.log 'save current'
@@ -85,7 +85,7 @@ on_toggle_three = (e) ->
   $target.toggleClass('active')
 
 on_next = (e) -> # next button
-  #console.log 'on next'
+  console.log 'on next'
   e.preventDefault()
   $target = $(e.target)
   label = get_label_from($target)
@@ -95,14 +95,14 @@ on_next = (e) -> # next button
     $next.click()
 
 on_previous = (e) -> # previous button
-  #console.log 'on previous'
+  console.log 'on previous'
   e.preventDefault()
   $target = $(e.target)
   label = get_label_from($target)
   selector = "ul.nav.nav-tabs li a[href=##{label}]"
-  $next = $(selector).parent().prevAll('[class!=nav-header]').first().find('a')
-  if $next.length
-    $next.click()
+  $previous = $(selector).parent().prevAll('[class!=nav-header]').first().find('a')
+  if $previous.length
+    $previous.click()
 
 on_update = (e) -> # timer update
   #console.log 'on update'
@@ -120,9 +120,9 @@ on_update = (e) -> # timer update
 return_on_show_one = (init_time, label) ->
   #console.log 'return on show', init_time, label
   (e) ->
-    #console.log 'on show', 'timers.current', timers.current, init_time, label
-    if timers.current? and timers.current.$toggle.hasClass('active')
-      timers.current.$toggle.click()
+    console.log 'on show one', 'timers.current', timers.current, init_time, label
+    if timers.current_running()
+      timers.stop_current()
     timers[label] ?= new Timer init_time
     timer = timers[label]
     timers.save_current timer, '1'
@@ -138,9 +138,9 @@ return_on_show_one = (init_time, label) ->
 return_on_show_two = (init_time, label) ->
   #console.log 'return on show', init_time, label
   (e) ->
-    #console.log 'on show', 'timers.current', timers.current, init_time, label
+    console.log 'on show two', 'timers.current', timers.current, init_time, label
     if timers.current_running()
-      timers.current.$toggle.click()
+      timers.stop_current()
     timers[label] ?= new Timer init_time
     timer = timers[label]
     timers.save_current timer, '2'
@@ -156,7 +156,7 @@ return_on_show_two = (init_time, label) ->
 return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
   #console.log 'return on show', init_time, label
   (e) ->
-    console.log 'on show', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
+    console.log 'on show three', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
     if timers.current_running()
       timers.stop_current()
     timers[label] ?=
@@ -309,4 +309,5 @@ $ ->
     next: false
 
   # init nav tabs
-  $('a[href=#pos-1-1]').click()
+  #$('a[href=#pos-1-1]').click()
+  $('a[href=#3]').click()

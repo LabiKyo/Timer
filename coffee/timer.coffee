@@ -52,7 +52,7 @@ class window.Timer
       #@trigger 'start.timer'
 
   stop: =>
-    console.log 'on stop'
+    console.log 'stop'
     if @id
       clearInterval(@id)
       @id = undefined
