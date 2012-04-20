@@ -1,4 +1,34 @@
-window.timers = {}
+window.timers =
+  current_running: ->
+    console.log 'current running'
+    unless window.timers.current?
+      return false
+    current = window.timers.current
+    switch current.type
+      when '1'
+        current.$toggle.hasClass('active')
+      when '2'
+        '' # TODO
+      when '3'
+        '' # TODO
+
+  stop_current: ->
+    console.log 'stop current'
+    current = window.timers.current
+    switch current.type
+      when '1'
+        current.$toggle.click()
+      when '2'
+        '' # TODO
+      when '3'
+        '' # TODO
+
+  save_current: (timer, type, first_side) =>
+    console.log 'save current'
+    current = window.timers.current = timer
+    current.type = type
+    current.side = first_side
+
 get_label_from = ($btn) ->
   $btn.closest('.tab-pane').get(0).id
 
@@ -17,6 +47,15 @@ on_reset = (e) -> # reset button
 
 on_toggle = (e) -> # toggle button
   #console.log 'on toggle'
+  switch timers.current.type
+    when '1'
+      on_toggle_one(e)
+    when '2'
+      on_toggle_one(e)
+    when '3'
+      on_toggle_three(e)
+
+on_toggle_one = (e) ->
   e.preventDefault()
   $target = $(e.target)
   if $target.hasClass('disabled') # timeout
@@ -27,6 +66,21 @@ on_toggle = (e) -> # toggle button
     $target.html('<i class="icon-play"></i> 开始')
   else
     timer.start()
+    $target.html('<i class="icon-pause"></i> 暂停')
+  $target.toggleClass('active')
+
+on_toggle_three = (e) ->
+  e.preventDefault()
+  $target = $(e.target)
+  if $target.hasClass('disabled') # timeout
+    return
+  timer = get_timer_from($target)
+  side = timers.current.side
+  if $target.hasClass('active')
+    timer[side].stop()
+    $target.html('<i class="icon-play"></i> 开始')
+  else
+    timer[side].start()
     $target.html('<i class="icon-pause"></i> 暂停')
   $target.toggleClass('active')
 
@@ -63,7 +117,7 @@ on_update = (e) -> # timer update
 
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
-return_on_show = (init_time, label) ->
+return_on_show_one = (init_time, label) ->
   #console.log 'return on show', init_time, label
   (e) ->
     #console.log 'on show', 'timers.current', timers.current, init_time, label
@@ -71,7 +125,7 @@ return_on_show = (init_time, label) ->
       timers.current.$toggle.click()
     timers[label] ?= new Timer init_time
     timer = timers[label]
-    timers.current = timer # record current timer
+    timers.save_current timer, '1'
     _(timer).extend
       label: label
       $el: $("##{label} .timer")
@@ -80,6 +134,64 @@ return_on_show = (init_time, label) ->
     timer
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
+
+return_on_show_two = (init_time, label) ->
+  #console.log 'return on show', init_time, label
+  (e) ->
+    #console.log 'on show', 'timers.current', timers.current, init_time, label
+    if timers.current_running()
+      timers.current.$toggle.click()
+    timers[label] ?= new Timer init_time
+    timer = timers[label]
+    timers.save_current timer, '2'
+    _(timer).extend
+      label: label
+      $el: $("##{label} .timer")
+      $progress: $("##{label} .progress .bar")
+      $toggle: $("##{label} .btn.toggle")
+    timer
+      .on('update', on_update)
+      .trigger 'update' # trigger once to init view
+
+return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
+  #console.log 'return on show', init_time, label
+  (e) ->
+    console.log 'on show', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
+    if timers.current_running()
+      timers.stop_current()
+    timers[label] ?=
+      pos: new Timer init_time_pos
+      con: new Timer init_time_con
+    timer = timers[label]
+    timers.save_current timer, '3', first_side
+    _(timer.pos).extend
+      label: label
+      $el: $("##{label} .timer.pos")
+      $progress: $("##{label} .progress.pos .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+    _(timer.con).extend
+      label: label
+      $el: $("##{label} .timer.con")
+      $progress: $("##{label} .progress.con .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+    ###
+    _(timer).extend
+      label: label
+      $el_pos: $("##{label} .timer.pos")
+      $el_con: $("##{label} .timer.con")
+      $progress_pos: $("##{label} .progress.pos .bar")
+      $progress_con: $("##{label} .progress.con .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+    ###
+    timer.pos
+      .on('update', on_update)
+      .trigger 'update' # trigger once to init view
+    timer.con
+      .on('update', on_update)
+      .trigger 'update' #trigger once to init view
 
 default_options_one =
   $container: $('.main-pane')
@@ -92,7 +204,7 @@ init_view_one = (options = default_options_one) ->
     return false
   template = _.template($('#tab-pane-type-one').html())
   options.$container.append template(options)
-  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
+  $("a[href=##{options.label}]").on 'show', return_on_show_one(options.init_time, options.label)
 
 default_options_two =
   $container: $('.main-pane')
@@ -105,7 +217,7 @@ init_view_two = (options = default_options_two) ->
     return false
   template = _.template($('#tab-pane-type-two').html())
   options.$container.append template(options)
-  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
+  $("a[href=##{options.label}]").on 'show', return_on_show_two(options.init_time, options.label)
 
 default_options_three =
   $container: $('.main-pane')
@@ -114,11 +226,11 @@ default_options_three =
 
 init_view_three = (options = default_options_three) ->
   options = _.extend(_.clone(default_options_three), options)
-  unless options.label? and options.title?
+  unless options.label? and options.title? and options.first_side?
     return false
   template = _.template($('#tab-pane-type-three').html())
   options.$container.append template(options)
-  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
+  $("a[href=##{options.label}]").on 'show', return_on_show_three(options.init_time_pos, options.init_time_con, options.label, options.first_side)
 
 $ ->
   # binding
