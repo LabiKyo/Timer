@@ -40,6 +40,16 @@ on_next = (e) -> # next button
   if $next.length
     $next.click()
 
+on_previous = (e) -> # previous button
+  #console.log 'on previous'
+  e.preventDefault()
+  $target = $(e.target)
+  label = get_label_from($target)
+  selector = "ul.nav.nav-tabs li a[href=##{label}]"
+  $next = $(selector).parent().prevAll('[class!=nav-header]').first().find('a')
+  if $next.length
+    $next.click()
+
 on_update = (e) -> # timer update
   #console.log 'on update'
   @$el.html(@to_string())
@@ -116,6 +126,7 @@ $ ->
     .on('click', '.btn.toggle', on_toggle)
     .on('click', '.btn.reset', on_reset)
     .on('click', '.btn.next', on_next)
+    .on('click', '.btn.previous', on_previous)
 
   # init view
   init_view_one
