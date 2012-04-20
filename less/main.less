@@ -41,11 +41,12 @@ header {
       letter-spacing: 0.05em;
     }
     .operations {
-      .toggle {
-        width: 2 * @fluidGridColumnWidth + @fluidGridGutterWidth;
-      }
       .btn {
         margin-right: @fluidGridGutterWidth;
+        width: 2 * @fluidGridColumnWidth + @fluidGridGutterWidth;
+      }
+      .btn.toggle {
+        width: @fluidGridColumnWidth + @fluidGridGutterWidth;
       }
     }
   }
