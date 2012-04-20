@@ -1,16 +1,16 @@
 class window.Timer
-  constructor: (time) -> # in milliseconds
+  constructor: (time, on_update) -> # in milliseconds
+    #console.log 'new timer:', time
+    @on 'update', on_update
     @reset(time)
 
-  # private
+  # === private ========================================
 
   _interval: 97 # in milliseconds
 
-  _handler: $('#handler')
-
   _count_down: =>
     @time -= @_interval + 3 # for delay
-    @_handler.trigger('update')
+    @trigger 'update'
     if @time <= 0
       @stop()
 
@@ -19,36 +19,56 @@ class window.Timer
     s = '0' + s if s.length is 1 # fill 0 if only 1 digit
     s
 
-  # public
+  # === public ========================================
 
+  # proxy for event handler
   on: (events, handler) =>
-    @_handler.on(events, handler)
+    #console.log 'on'
+    $(@).on events, handler
+    @
 
-  off: (events, handler) =>
-    @_handler.off(events, handler)
+  off: () =>
+    #console.log 'off'
+    $(@).off events, handler
+    @
 
+  trigger: (events) =>
+    #console.log 'trigger', events
+    $(@).trigger events
+    @
+
+  # timer function
   reset: (time) =>
     if time and typeof time is 'number'
-      @time = time
+      @init_time = @time = time
+      @trigger 'update'
 
   start: =>
+    #console.log 'start'
     if @time > 0
       @id = setInterval(@_count_down, @_interval)
-      @_handler.trigger('start')
+      #@trigger 'start.timer'
 
   stop: =>
+    #console.log 'stop'
     if @id
       clearInterval(@id)
       @id = undefined
-      @_handler.trigger('stop')
+      @trigger 'stop.timer'
 
-  toString: =>
+  toggle: =>
+    #console.log 'toggle', @id, @is_counting()
+    if @is_counting
+      @stop()
+    else
+      @start()
+
+  # helper
+  to_string: =>
     h = @hour()
     time = "#{@minute()}:#{@second()}"
     time = "#{h}:" + time if h
     time
-
-  # helper
 
   second: =>
     @_to_time_string(~~(@time / 1000 % 60))

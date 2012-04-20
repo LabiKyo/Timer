@@ -3,18 +3,21 @@
 <head>
   <title>计时器</title>
   <link rel="stylesheet" href="css/main.css">
+  <!--
+  <link rel="stylesheet/less" type="text/css" href="less/main.less">
+  -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 </head>
-<body data-spy="scroll" data-offset="50">
-  <div id="handler" class="hide"></div>
-  <header class="container-fluid"><h1>某某杯辩论赛</h1></header>
+<body>
+  <header class="container-fluid"><h1>中国矿业大学（北京）校园新生辩论赛</h1></header>
 
   <section id="application" class="container-fluid">
     <div class="row-fluid">
       <nav class="span2 tabbable tabs-left">
-        <ul class="nav nav-tabs">
+        <ul class="span2 nav nav-tabs">
           <li class="nav-header">破题立论阶段</li>
-          <li class="active"><a href="#pos-1-1" data-toggle="tab">正方 破题立论</a></li>
+          <li><a href="#pos-1-1" data-toggle="tab">正方 破题立论</a></li>
           <li><a href="#con-1-2" data-toggle="tab">反方 盘问</a></li>
           <li><a href="#con-1-1" data-toggle="tab">反方 破题立论</a></li>
           <li><a href="#pos-1-2" data-toggle="tab">正方 盘问</a></li>
@@ -32,8 +35,16 @@
       </nav>
       <div class="span8 tab-content main-pane">
 
-        <section class="tab-pane active" id="pos-1-1">
+        <section class="tab-pane" id="pos-1-1">
           <h2>正方一辩破题立论</h2>
+          <h3 class="timer hero-unit"></h3>
+          <div class="progress progress-striped active">
+            <div class="bar"></div>
+          </div>
+          <div class="operations clearfix">
+            <a href="#" class="toggle btn btn-large btn-primary" data-toggle="button">开始</a>
+            <a href="#" class="next btn btn-large">下一阶段</a>
+          </div>
         </section>
 
         <section class="tab-pane" id="con-1-2">

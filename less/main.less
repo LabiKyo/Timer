@@ -13,6 +13,10 @@ body {
   padding: 30px;
 }
 
+header, footer, #application {
+  min-width: 960px;
+}
+
 header, footer {
   text-align: center;
 }
@@ -26,8 +30,21 @@ header {
 }
 
 .main-pane {
+  text-align: center;
   padding: 20px;
   h2 {
-    text-align: center;
+    padding-bottom: 20px;
+  }
+  .tab-pane {
+    .hero-unit {
+      font-size: 110px;
+      letter-spacing: 0.05em;
+    }
+    .operations {
+      .toggle {
+        width: 2 * @fluidGridColumnWidth + @fluidGridGutterWidth;
+        margin-right: @fluidGridGutterWidth;
+      }
+    }
   }
 }
