@@ -402,5 +402,5 @@ $ ->
     next: false
 
   # init nav tabs
-  #$('a[href=#pos-1-1]').click()
-  $('a[href=#con-2-1]').click()
+  $('a[href=#pos-1-1]').click()
+  #$('a[href=#con-2-1]').click()
