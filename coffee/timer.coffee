@@ -39,6 +39,8 @@ class window.Timer
 
   # timer function
   reset: (time) =>
+    if @id? # stop current timer
+      clearInterval(@id)
     if time and typeof time is 'number'
       @init_time = @time = time
       @trigger 'update'

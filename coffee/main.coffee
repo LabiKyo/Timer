@@ -1,11 +1,25 @@
+window.timers = {}
+get_timer_from = ($btn) ->
+  label =$btn.closest('.tab-pane').get(0).id
+  window.timers[label]
+
+on_reset = (e) -> # reset button
+  e.preventDefault()
+  $target = $(e.target)
+  unless confirm '确定要重置时间么？'
+    return
+
+  timer = get_timer_from($target)
+  timer.reset(timer.init_time)
+
+
 on_toggle = (e) -> # toggle button
   #console.log 'on toggle'
   e.preventDefault()
   $target = $(e.target)
   if $target.hasClass('disabled') # timeout
     return
-  label = $target.closest('.tab-pane').get(0).id
-  timer = window.timers[label]
+  timer = get_timer_from($target)
   if $target.hasClass('active')
     $target.html('开始')
     timer.stop()
@@ -43,9 +57,12 @@ return_on_show = (init_time, label) ->
       .trigger 'update' # trigger once to init view
 
 $ ->
-  window.timers = {}
-  $('body').on 'click', '.btn.toggle', on_toggle
+  # binding
+  $('body')
+    .on('click', '.btn.toggle', on_toggle)
+    .on('click', '.btn.reset', on_reset)
 
   $('a[href=#pos-1-1]').on 'show', return_on_show(3 * 60 * 1000, 'pos-1-1')
 
+  # init nav tabs
   $('a[href=#pos-1-1]').click()
