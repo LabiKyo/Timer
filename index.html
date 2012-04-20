@@ -59,9 +59,25 @@
   <script type="text/template" id="tab-pane-type-two">
     <section class="tab-pane" id="<%- label %>">
       <h2><%- title %></h2>
-      <h3 class="timer hero-unit"></h3>
-      <div class="progress progress-striped active">
-        <div class="bar"></div>
+      <div class="row-fluid two-col clearfix">
+        <h3 class="timer pos hero-unit span4"></h3>
+        <h3 class="timer con hero-unit span4"></h3>
+      </div>
+      <div class="row-fluid clearfix main">
+        <div class="progress pos progress-striped active span6 clearfix">
+          <div class="bar"></div>
+        </div>
+        <div class="progress con progress-striped active span6 clearfix">
+          <div class="bar"></div>
+        </div>
+      </div>
+      <div class="row-fluid clearfix single">
+        <div class="progress pos progress-striped active span6 clearfix">
+          <div class="bar"></div>
+        </div>
+        <div class="progress con progress-striped active span6 clearfix">
+          <div class="bar"></div>
+        </div>
       </div>
       <div class="operations clearfix">
         <a href="#" class="previous btn btn-large btn-info<% if (!previous) { %> hide<% } %>"><i class="icon-chevron-left"></i> 上一阶段</a>
@@ -79,7 +95,7 @@
         <h3 class="timer pos hero-unit span4"></h3>
         <h3 class="timer con hero-unit span4"></h3>
       </div>
-      <div class="row-fluid pos clearfix">
+      <div class="row-fluid clearfix">
         <div class="progress pos progress-striped active span6 clearfix">
           <div class="bar"></div>
         </div>

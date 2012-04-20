@@ -46,7 +46,10 @@ window.timers =
   change_side: =>
     console.log 'change side'
     current = window.timers.current
-    current.side = timers._side_matrix[current.side]
+    single = window.timers.current["single_#{current.side}"]
+    console.log 'single', single
+    single.reset(single.init_time)
+    current.side = window.timers._side_matrix[current.side]
 
 get_label_from = ($btn) ->
   $btn.closest('.tab-pane').get(0).id
@@ -67,7 +70,14 @@ on_reset = (e) -> # reset button
     when '1'
       timer.reset(timer.init_time)
       timer.$toggle.removeClass('disabled')
-    when '2', '3'
+    when '2'
+      timer.pos.reset(timer.pos.init_time)
+      timer.con.reset(timer.con.init_time)
+      timer.single_pos.reset(timer.single_pos.init_time)
+      timer.single_con.reset(timer.single_con.init_time)
+      timer.pos.$toggle.removeClass('disabled')
+      timer.con.$toggle.removeClass('disabled')
+    when '3'
       timer.pos.reset(timer.pos.init_time)
       timer.con.reset(timer.con.init_time)
       timer.pos.$toggle.removeClass('disabled')
@@ -79,7 +89,7 @@ on_toggle = (e) -> # toggle button
     when '1'
       on_toggle_one(e)
     when '2'
-      on_toggle_one(e)
+      on_toggle_two(e)
     when '3'
       on_toggle_three(e)
 
@@ -94,6 +104,24 @@ on_toggle_one = (e) ->
     $target.html('<i class="icon-play"></i> 开始')
   else
     timer.start()
+    $target.html('<i class="icon-pause"></i> 暂停')
+  $target.toggleClass('active')
+
+on_toggle_two = (e) ->
+  e.preventDefault()
+  $target = $(e.target)
+  if $target.hasClass('disabled') # timeout
+    return
+  timer = get_timer_from($target)
+  side = timers.current.side
+  single = "single_#{side}"
+  if $target.hasClass('active')
+    timer[side].stop()
+    timer[single].stop()
+    $target.html('<i class="icon-play"></i> 开始')
+  else
+    timer[side].start()
+    timer[single].start()
     $target.html('<i class="icon-pause"></i> 暂停')
   $target.toggleClass('active')
 
@@ -134,7 +162,7 @@ on_previous = (e) -> # previous button
 
 on_update = (e) -> # timer update
   #console.log 'on update'
-  @$el.html(@to_string())
+  @$el?.html(@to_string())
   if @time is 0
     switch window.timers.current.type
       when '1'
@@ -149,9 +177,9 @@ on_update = (e) -> # timer update
           window.timers.start_current()
   else if @time < 25600
     color = '#' + (~~((25600 - @time) / 100)).toString(16) + '0000'
-    @$el.css('color', color)
+    @$el?.css('color', color)
   else
-    @$el.css('color', '#000')
+    @$el?.css('color', '#000')
 
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
@@ -177,22 +205,54 @@ return_on_show_one = (init_time, label) ->
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
 
-return_on_show_two = (init_time, label) ->
+return_on_show_two = (init_time_pos, init_time_con, label, first_side, single_time_pos, single_time_con) ->
   #console.log 'return on show', init_time, label
   (e) ->
-    console.log 'on show two', 'timers.current', timers.current, init_time, label
+    console.log 'on show two', 'timers.current', timers.current, init_time_pos, init_time_con, label
     timers.stop_current()
-    timers[label] ?= new Timer init_time
+    timers[label] ?=
+      pos: new Timer init_time_pos
+      con: new Timer init_time_con
+      single_pos: new Timer single_time_pos
+      single_con: new Timer single_time_con
     timer = timers[label]
-    timers.save_current timer, '2'
-    _(timer).extend
+    timers.save_current timer, '2', first_side
+    _(timer.pos).extend
       label: label
-      $el: $("##{label} .timer")
-      $progress: $("##{label} .progress .bar")
+      $el: $("##{label} .timer.pos")
+      $progress: $("##{label} .main .progress.pos .bar")
       $toggle: $("##{label} .btn.toggle")
-    timer
+      $change: $("##{label} .btn.change")
+    _(timer.con).extend
+      label: label
+      $el: $("##{label} .timer.con")
+      $progress: $("##{label} .main .progress.con .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+    _(timer.single_pos).extend
+      label: label
+      $progress: $("##{label} .single .progress.pos .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+      single: true
+    _(timer.single_con).extend
+      label: label
+      $progress: $("##{label} .single .progress.con .bar")
+      $toggle: $("##{label} .btn.toggle")
+      $change: $("##{label} .btn.change")
+      single: true
+    timer.pos
       .on('update', on_update)
-      .trigger 'update' # trigger once to init view
+      .trigger 'update'
+    timer.con
+      .on('update', on_update)
+      .trigger 'update'
+    timer.single_pos
+      .on('update', on_update)
+      .trigger 'update'
+    timer.single_con
+      .on('update', on_update)
+      .trigger 'update'
 
 return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
   #console.log 'return on show', init_time, label
@@ -216,16 +276,6 @@ return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
       $progress: $("##{label} .progress.con .bar")
       $toggle: $("##{label} .btn.toggle")
       $change: $("##{label} .btn.change")
-    ###
-    _(timer).extend
-      label: label
-      $el_pos: $("##{label} .timer.pos")
-      $el_con: $("##{label} .timer.con")
-      $progress_pos: $("##{label} .progress.pos .bar")
-      $progress_con: $("##{label} .progress.con .bar")
-      $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
-    ###
     timer.pos
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
@@ -257,7 +307,7 @@ init_view_two = (options = default_options_two) ->
     return false
   template = _.template($('#tab-pane-type-two').html())
   options.$container.append template(options)
-  $("a[href=##{options.label}]").on 'show', return_on_show_two(options.init_time, options.label)
+  $("a[href=##{options.label}]").on 'show', return_on_show_two(options.init_time_pos, options.init_time_con, options.label, options.first_side, options.single_time_pos, options.single_time_con)
 
 default_options_three =
   $container: $('.main-pane')
@@ -353,4 +403,4 @@ $ ->
 
   # init nav tabs
   #$('a[href=#pos-1-1]').click()
-  $('a[href=#3]').click()
+  $('a[href=#con-2-1]').click()
