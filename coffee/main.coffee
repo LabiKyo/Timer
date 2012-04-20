@@ -23,21 +23,20 @@ on_toggle = (e) -> # toggle button
     return
   timer = get_timer_from($target)
   if $target.hasClass('active')
-    $target.html('<i class="icon-play"></i> 开始')
     timer.stop()
+    $target.html('<i class="icon-play"></i> 开始')
   else
-    $target.html('<i class="icon-pause"></i> 暂停')
     timer.start()
+    $target.html('<i class="icon-pause"></i> 暂停')
   $target.toggleClass('active')
 
 on_next = (e) -> # next button
-  console.log 'on next'
+  #console.log 'on next'
   e.preventDefault()
   $target = $(e.target)
   label = get_label_from($target)
   selector = "ul.nav.nav-tabs li a[href=##{label}]"
   $next = $(selector).parent().nextAll('[class!=nav-header]').first().find('a')
-  console.log selector, $next
   if $next.length
     $next.click()
 
@@ -55,11 +54,14 @@ on_update = (e) -> # timer update
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
 return_on_show = (init_time, label) ->
-  #console.log 'return on show'
+  #console.log 'return on show', init_time, label
   (e) ->
-    #console.log 'on show'
+    #console.log 'on show', 'timers.current', timers.current, init_time, label
+    if timers.current? and timers.current.$toggle.hasClass('active')
+      timers.current.$toggle.click()
     timers[label] ?= new Timer init_time
     timer = timers[label]
+    timers.current = timer # record current timer
     _(timer).extend
       label: label
       $el: $("##{label} .timer")
@@ -69,6 +71,20 @@ return_on_show = (init_time, label) ->
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
 
+default_options_one =
+  $container: $('.main-pane')
+  previous: true
+  next: true
+
+init_view_one = (options = default_options_one) ->
+  options = _.extend(_.clone(default_options_one), options)
+  unless options.label? and options.title?
+    return false
+  template = _.template($('#tab-pane-type-one').html())
+  options.$container.append template(options)
+  $("a[href=##{options.label}]").on 'show', return_on_show(options.init_time, options.label)
+
+
 $ ->
   # binding
   $('body')
@@ -76,7 +92,38 @@ $ ->
     .on('click', '.btn.reset', on_reset)
     .on('click', '.btn.next', on_next)
 
-  $('a[href=#pos-1-1]').on 'show', return_on_show(3 * 60 * 1000, 'pos-1-1')
+  # init view
+  init_view_one
+    title: '正方一辩破题立论'
+    label: 'pos-1-1'
+    previous: false
+    init_time: 3 * 60 * 1000 # 3 min
+
+  init_view_one
+    title: '反方一辩破题立论'
+    label: 'con-1-1'
+    init_time: 3 * 60 * 1000 # 3 min
+
+  init_view_one
+    title: '正方三辩攻辩小结'
+    label: 'pos-2-2'
+    init_time: 1.5 * 60 * 1000 # 1.5 min
+
+  init_view_one
+    title: '反方三辩攻辩小结'
+    label: 'con-2-2'
+    init_time: 1.5 * 60 * 1000 # 1.5 min
+
+  init_view_one
+    title: '正方四辩总结陈词'
+    label: 'pos-4'
+    init_time: 4 * 60 * 1000 # 4 min
+
+  init_view_one
+    title: '反方四辩总结陈词'
+    label: 'con-4'
+    init_time: 4 * 60 * 1000 # 4 min
+    next: false
 
   # init nav tabs
   $('a[href=#pos-1-1]').click()

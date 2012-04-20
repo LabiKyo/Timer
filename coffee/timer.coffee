@@ -46,24 +46,17 @@ class window.Timer
       @trigger 'update'
 
   start: =>
-    #console.log 'start'
+    console.log 'start'
     if @time > 0
       @id = setInterval(@_count_down, @_interval)
       #@trigger 'start.timer'
 
   stop: =>
-    #console.log 'stop'
+    console.log 'on stop'
     if @id
       clearInterval(@id)
       @id = undefined
-      @trigger 'stop.timer'
-
-  toggle: =>
-    #console.log 'toggle', @id, @is_counting()
-    if @is_counting
-      @stop()
-    else
-      @start()
+      #@trigger 'stop.timer'
 
   # helper
   to_string: =>
