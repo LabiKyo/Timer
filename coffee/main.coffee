@@ -105,6 +105,16 @@ $ ->
     init_time: 3 * 60 * 1000 # 3 min
 
   init_view_one
+    title: '正方二辩盘问反方一辩'
+    label: 'pos-1-2'
+    init_time: 2 * 60 * 1000 # 2 min
+
+  init_view_one
+    title: '反方二辩盘问正方一辩'
+    label: 'con-1-2'
+    init_time: 2 * 60 * 1000 # 2 min
+
+  init_view_one
     title: '正方三辩攻辩小结'
     label: 'pos-2-2'
     init_time: 1.5 * 60 * 1000 # 1.5 min
