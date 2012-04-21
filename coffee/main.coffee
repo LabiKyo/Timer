@@ -1,5 +1,4 @@
 window.audios =
-  switch: new Audio 'audio/switch.wav'
   end: new Audio 'audio/end.wav'
   tick: new Audio 'audio/tick.wav'
 window.timers =
@@ -204,7 +203,6 @@ on_update = (e) -> # timer update
 
 on_switch = (e) ->
   e.preventDefault()
-  audios.switch.play()
   timers.stop_current()
   timers.switch_side()
   timers.start_current()
