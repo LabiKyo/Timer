@@ -46,9 +46,8 @@ window.timers =
   change_side: =>
     console.log 'change side'
     current = window.timers.current
-    single = window.timers.current["single_#{current.side}"]
-    console.log 'single', single
-    single.reset(single.init_time)
+    single = current["single_#{current.side}"]
+    single?.reset(single.init_time)
     current.side = window.timers._side_matrix[current.side]
 
 get_label_from = ($btn) ->
@@ -184,6 +183,7 @@ on_update = (e) -> # timer update
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
 on_change = (e) ->
+  e.preventDefault()
   timers.stop_current()
   timers.change_side()
   timers.start_current()
