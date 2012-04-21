@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>计时器</title>
-  <link rel="stylesheet" href="css/main.css">
-  <!--
+  <title>中国矿业大学（北京）第八届校园辩论赛</title>
+  <!-- development
   <link rel="stylesheet/less" type="text/css" href="less/main.less">
   -->
+  <!-- production
+  -->
+  <link rel="stylesheet" href="css/main.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 </head>
 <body>
-  <header class="container-fluid"><h1>中国矿业大学（北京）校园新生辩论赛</h1></header>
+  <header class="container-fluid"><h1>中国矿业大学（北京）第八届校园辩论赛</h1></header>
 
   <section id="application" class="container-fluid">
     <div class="row-fluid">
@@ -39,7 +41,8 @@
   </section>
 
   <footer class="container-fluid">
-    Author: <a href="mailto:labikyo@gmail.com" rel="author" title="labikyo@gmail.com">Labi Kyo</a>
+    中国矿业大学（北京）第八届校园辩论赛 |
+     <a href="mailto:labikyo@gmail.com" rel="author" title="labikyo@gmail.com">Labi Kyo</a>
   </footer>
   <script type="text/template" id="tab-pane-type-one">
     <section class="tab-pane" id="<%- label %>">
@@ -114,17 +117,17 @@
   </script>
   <script src="js/jquery-1.7.1.js"></script>
   <script src="js/underscore-1.3.1.js"></script>
-  <!--
-  script src="vendor/backbone-0.9.1.js"></script>
+  <script src="vendor/backbone-0.9.1.js"></script>
+  <script src="js/bootstrap-tab.js"></script>
+  <!-- development
   -->
   <script src="js/coffee-script.js"></script>
   <script src="js/less-1.3.0.min.js"></script>
-  <script src="js/bootstrap-tab.js"></script>
-  <!--
+  <script src="coffee/timer.coffee" type="text/coffeescript"></script>
+  <script src="coffee/main.coffee" type="text/coffeescript"></script>
+  <!-- production
   <script src="js/timer.js"></script>
   <script src="js/main.js"></script>
   -->
-  <script src="coffee/timer.coffee" type="text/coffeescript"></script>
-  <script src="coffee/main.coffee" type="text/coffeescript"></script>
 </body>
 </html>
