@@ -67,18 +67,13 @@ on_reset = (e) -> # reset button
   timer = get_timer_from($target)
   switch window.timers.current.type
     when '1'
-      timer.reset(timer.init_time)
+      timer.reset()
       timer.$toggle.removeClass('disabled')
-    when '2'
-      timer.pos.reset(timer.pos.init_time)
-      timer.con.reset(timer.con.init_time)
-      timer.single_pos.reset(timer.single_pos.init_time)
-      timer.single_con.reset(timer.single_con.init_time)
-      timer.pos.$toggle.removeClass('disabled')
-      timer.con.$toggle.removeClass('disabled')
-    when '3'
-      timer.pos.reset(timer.pos.init_time)
-      timer.con.reset(timer.con.init_time)
+    when '2', '3'
+      timer.pos.reset()
+      timer.con.reset()
+      timer.single_pos?.reset()
+      timer.single_con?.reset()
       timer.pos.$toggle.removeClass('disabled')
       timer.con.$toggle.removeClass('disabled')
 
