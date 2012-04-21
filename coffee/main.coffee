@@ -36,7 +36,7 @@ window.timers =
     #console.info 'save current'
     current = window.timers.current = timer
     current.type = type
-    current.side = first_side
+    current.first_side = current.side = first_side
 
   _side_matrix:
     'pos': 'con'
@@ -64,6 +64,7 @@ extend_timer = (timer, label, side, is_single) ->
 
   if is_single
     timer.$progress = $("##{label} .single .progress.#{side} .bar")
+    timer.is_single = true
     delete timer.$el
 
 get_label_from = ($btn) ->
@@ -183,7 +184,7 @@ on_update = (e) -> # timer update
         @$toggle.click().addClass('disabled')
       when '2', '3'
         other_side = timers.other_side()
-        if other_side.time is 0
+        if other_side.time is 0 # both end
           current = timers.current
           if current[current.side].time is 0
             @$toggle.click().addClass('disabled')
@@ -192,7 +193,8 @@ on_update = (e) -> # timer update
         else
           window.timers.stop_current()
           window.timers.switch_side()
-          window.timers.start_current()
+          unless @is_single
+            window.timers.start_current()
   else if @time < 25600
     color = '#' + (~~((25600 - @time) / 100)).toString(16) + '0000'
     @$el?.css('color', color)
