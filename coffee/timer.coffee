@@ -1,8 +1,8 @@
 class window.Timer
   constructor: (time, on_update) -> # in milliseconds
     #console.info 'new timer:', time
-    @on 'update', on_update
-    @reset(time)
+    _.extend @, window.Backbone.Events # make it eventable
+    @init(time)
 
   # === private ========================================
 
@@ -21,42 +21,32 @@ class window.Timer
 
   # === public ========================================
 
-  # proxy for event handler
-  on: (events, handler) =>
-    #console.info 'on'
-    $(@).on events, handler
-    @
-
-  off: () =>
-    #console.info 'off'
-    $(@).off events, handler
-    @
-
-  trigger: (events) =>
-    #console.info 'trigger', events
-    $(@).trigger events
-    @
-
   # timer function
-  reset: (time) =>
-    if @id? # stop current timer
-      clearInterval(@id)
+  init: (time) =>
     if time and typeof time is 'number'
       @init_time = @time = time
       @trigger 'update'
+      @trigger 'init'
+
+  reset: () =>
+    if @id? # stop current timer
+      clearInterval(@id)
+    @time = @init_time
+    @trigger 'reset'
+    @trigger 'update'
 
   start: =>
     #console.info 'start'
     if @time > 0
       @id = setInterval(@_count_down, @_interval)
-      #@trigger 'start.timer'
+      @trigger 'start'
 
   stop: =>
     #console.info 'stop'
     if @id
       clearInterval(@id)
       @id = undefined
-      #@trigger 'stop.timer'
+      @trigger 'stop'
 
   # helper
   to_string: =>
