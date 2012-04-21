@@ -50,10 +50,24 @@ window.timers =
     current["single_#{current.side}"]?.reset()
     current.side = window.timers._side_matrix[current.side]
 
+extend_timer = (timer, label, side, is_single) ->
+  #console.info 'extend timer', timer, label, side, is_single
+  _(timer).extend
+    label: label
+    $el: $("##{label} .timer.#{side}")
+    $progress: $("##{label} .main .progress.#{side} .bar")
+    $toggle: $("##{label} .btn.toggle")
+    $switch: $("##{label} .btn.switch")
+
+  if is_single
+    timer.$progress = $("##{label} .single .progress.#{side} .bar")
+    delete timer.$el
+
 get_label_from = ($btn) ->
   $btn.closest('.tab-pane').get(0).id
 
 get_timer_from = ($btn) ->
+  console.info 'get_timer_from'
   label = get_label_from($btn)
   window.timers[label]
 
@@ -78,7 +92,7 @@ on_reset = (e) -> # reset button
       timer.con.$toggle.removeClass('disabled')
 
 on_toggle = (e) -> # toggle button
-  #console.info 'on toggle'
+  console.info 'on toggle', timers.current.type
   switch timers.current.type
     when '1'
       on_toggle_one(e)
@@ -111,11 +125,11 @@ on_toggle_two = (e) ->
   single = "single_#{side}"
   if $target.hasClass('active')
     timer[side].stop()
-    timer[single].stop()
+    timer[single]?.stop()
     $target.html('<i class="icon-play"></i> 开始')
   else
     timer[side].start()
-    timer[single].start()
+    timer[single]?.start()
     $target.html('<i class="icon-pause"></i> 暂停')
   $target.toggleClass('active')
 
@@ -200,54 +214,32 @@ return_on_show_one = (init_time, label) ->
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
 
-return_on_show_two = (init_time_pos, init_time_con, label, first_side, single_time_pos, single_time_con) ->
+return_on_show_two = (options) ->
   #console.info 'return on show', init_time, label
   (e) ->
-    #console.info 'on show two', 'timers.current', timers.current, init_time_pos, init_time_con, label
+    #console.info 'on show two'
     timers.stop_current()
+    label = options.label
     timers[label] ?=
-      pos: new Timer init_time_pos
-      con: new Timer init_time_con
-      single_pos: new Timer single_time_pos
-      single_con: new Timer single_time_con
+      pos: new Timer options.init_time_pos
+      con: new Timer options.init_time_con
     timer = timers[label]
-    timers.save_current timer, '2', first_side
-    _(timer.pos).extend
-      label: label
-      $el: $("##{label} .timer.pos")
-      $progress: $("##{label} .main .progress.pos .bar")
-      $toggle: $("##{label} .btn.toggle")
-      $switch: $("##{label} .btn.switch")
-    _(timer.con).extend
-      label: label
-      $el: $("##{label} .timer.con")
-      $progress: $("##{label} .main .progress.con .bar")
-      $toggle: $("##{label} .btn.toggle")
-      $switch: $("##{label} .btn.switch")
-    _(timer.single_pos).extend
-      label: label
-      $progress: $("##{label} .single .progress.pos .bar")
-      $toggle: $("##{label} .btn.toggle")
-      $switch: $("##{label} .btn.switch")
-      single: true
-    _(timer.single_con).extend
-      label: label
-      $progress: $("##{label} .single .progress.con .bar")
-      $toggle: $("##{label} .btn.toggle")
-      $switch: $("##{label} .btn.switch")
-      single: true
+    timer.single_pos = new Timer options.single_time_pos if options.has_single_pos
+    timer.single_con = new Timer options.single_time_con if options.has_single_con
+    timers.save_current timer, '2', options.first_side
+    label = options.label
+    extend_timer(timer.pos, label, 'pos')
+    extend_timer(timer.con, label, 'con')
+    extend_timer(timer.single_pos, label, 'pos', true) if options.has_single_pos
+    extend_timer(timer.single_con, label, 'con', true) if options.has_single_con
     timer.pos
       .on('update', on_update)
       .trigger 'update'
     timer.con
       .on('update', on_update)
       .trigger 'update'
-    timer.single_pos
-      .on('update', on_update)
-      .trigger 'update'
-    timer.single_con
-      .on('update', on_update)
-      .trigger 'update'
+    timer.single_pos?.on('update', on_update).trigger 'update'
+    timer.single_con?.on('update', on_update).trigger 'update'
 
 return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
   #console.info 'return on show', init_time, label
@@ -295,6 +287,8 @@ default_options_two =
   $container: $('.main-pane')
   previous: true
   next: true
+  has_single_pos: false
+  has_single_con: false
 
 init_view_two = (options = default_options_two) ->
   options = _.extend(_.clone(default_options_two), options)
@@ -302,7 +296,7 @@ init_view_two = (options = default_options_two) ->
     return false
   template = _.template($('#tab-pane-type-two').html())
   options.$container.append template(options)
-  $("a[href=##{options.label}]").on 'show', return_on_show_two(options.init_time_pos, options.init_time_con, options.label, options.first_side, options.single_time_pos, options.single_time_con)
+  $("a[href=##{options.label}]").on 'show', return_on_show_two(options)
 
 default_options_three =
   $container: $('.main-pane')
@@ -352,18 +346,18 @@ $ ->
     title: '正方三辩攻辩反方一、二、四辩'
     label: 'pos-2-1'
     init_time_pos: 60 * 1000 # 1 min
-    single_time_pos: 20 * 1000 # 20 second
     init_time_con: 1.5 * 60 * 1000 # 1.5 min
-    single_time_con: 30 * 1000 # 30 second
+    has_single_con: true
+    single_time_con: 20 * 1000 # 20 second
     first_side: 'pos'
 
   init_view_two
     title: '反方三辩攻辩正方一、二、四辩'
     label: 'con-2-1'
     init_time_con: 60 * 1000 # 1 min
-    single_time_con: 20 * 1000 # 20 second
     init_time_pos: 1.5 * 60 * 1000 # 1.5 min
-    single_time_pos: 30 * 1000 # 30 second
+    has_single_pos: true
+    single_time_pos: 20 * 1000 # 20 second
     first_side: 'con'
 
   init_view_one
@@ -397,5 +391,5 @@ $ ->
     next: false
 
   # init nav tabs
-  $('a[href=#pos-1-1]').click()
-  #$('a[href=#con-2-1]').click()
+  #$('a[href=#pos-1-1]').click()
+  $('a[href=#con-2-1]').click()
