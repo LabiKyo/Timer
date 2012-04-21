@@ -44,8 +44,8 @@ window.timers =
       return false
     window.timers.current[window.timers._side_matrix[window.timers.current.side]]
 
-  change_side: =>
-    #console.info 'change side'
+  switch_side: =>
+    #console.info 'switch side'
     current = window.timers.current
     current["single_#{current.side}"]?.reset()
     current.side = window.timers._side_matrix[current.side]
@@ -167,7 +167,7 @@ on_update = (e) -> # timer update
           @$toggle.click().addClass('disabled')
         else
           window.timers.stop_current()
-          window.timers.change_side()
+          window.timers.switch_side()
           window.timers.start_current()
   else if @time < 25600
     color = '#' + (~~((25600 - @time) / 100)).toString(16) + '0000'
@@ -177,10 +177,10 @@ on_update = (e) -> # timer update
 
   @$progress.width("#{(1 - @time / @init_time) * 100}%")
 
-on_change = (e) ->
+on_switch = (e) ->
   e.preventDefault()
   timers.stop_current()
-  timers.change_side()
+  timers.switch_side()
   timers.start_current()
 
 return_on_show_one = (init_time, label) ->
@@ -217,24 +217,24 @@ return_on_show_two = (init_time_pos, init_time_con, label, first_side, single_ti
       $el: $("##{label} .timer.pos")
       $progress: $("##{label} .main .progress.pos .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
     _(timer.con).extend
       label: label
       $el: $("##{label} .timer.con")
       $progress: $("##{label} .main .progress.con .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
     _(timer.single_pos).extend
       label: label
       $progress: $("##{label} .single .progress.pos .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
       single: true
     _(timer.single_con).extend
       label: label
       $progress: $("##{label} .single .progress.con .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
       single: true
     timer.pos
       .on('update', on_update)
@@ -264,13 +264,13 @@ return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
       $el: $("##{label} .timer.pos")
       $progress: $("##{label} .progress.pos .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
     _(timer.con).extend
       label: label
       $el: $("##{label} .timer.con")
       $progress: $("##{label} .progress.con .bar")
       $toggle: $("##{label} .btn.toggle")
-      $change: $("##{label} .btn.change")
+      $switch: $("##{label} .btn.switch")
     timer.pos
       .on('update', on_update)
       .trigger 'update' # trigger once to init view
@@ -324,7 +324,7 @@ $ ->
     .on('click', '.btn.reset', on_reset)
     .on('click', '.btn.next', on_next)
     .on('click', '.btn.previous', on_previous)
-    .on('click', '.btn.change', on_change)
+    .on('click', '.btn.switch', on_switch)
 
   # init view
   init_view_one
