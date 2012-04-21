@@ -47,8 +47,7 @@ window.timers =
   change_side: =>
     #console.info 'change side'
     current = window.timers.current
-    single = current["single_#{current.side}"]
-    single?.reset(single.init_time)
+    current["single_#{current.side}"]?.reset()
     current.side = window.timers._side_matrix[current.side]
 
 get_label_from = ($btn) ->
