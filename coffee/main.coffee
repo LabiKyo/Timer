@@ -1,3 +1,7 @@
+window.audios =
+  switch: new Audio 'audio/switch.wav'
+  end: new Audio 'audio/end.wav'
+  tick: new Audio 'audio/tick.wav'
 window.timers =
   current_running: ->
     #console.info 'current running'
@@ -171,14 +175,21 @@ on_previous = (e) -> # previous button
 on_update = (e) -> # timer update
   #console.info 'on update'
   @$el?.html(@to_string())
+  if @time is 31000 # 31s left
+    audios.tick.play()
   if @time is 0
+    audios.end.play()
     switch window.timers.current.type
       when '1'
         @$toggle.click().addClass('disabled')
       when '2', '3'
-        other_side = window.timers.other_side()
+        other_side = timers.other_side()
         if other_side.time is 0
-          @$toggle.click().addClass('disabled')
+          current = timers.current
+          if current[current.side].time is 0
+            @$toggle.click().addClass('disabled')
+          else
+            @reset()
         else
           window.timers.stop_current()
           window.timers.switch_side()
@@ -193,6 +204,7 @@ on_update = (e) -> # timer update
 
 on_switch = (e) ->
   e.preventDefault()
+  audios.switch.play()
   timers.stop_current()
   timers.switch_side()
   timers.start_current()
@@ -354,10 +366,10 @@ $ ->
   init_view_two
     title: '反方三辩攻辩正方一、二、四辩'
     label: 'con-2-1'
-    init_time_con: 60 * 1000 # 1 min
+    init_time_con: 2 * 1000 # 1 min
     init_time_pos: 1.5 * 60 * 1000 # 1.5 min
     has_single_pos: true
-    single_time_pos: 20 * 1000 # 20 second
+    single_time_pos: 2 * 1000 # 20 second
     first_side: 'con'
 
   init_view_one
@@ -391,5 +403,13 @@ $ ->
     next: false
 
   # init nav tabs
+  # production
   #$('a[href=#pos-1-1]').click()
+  # development
   $('a[href=#con-2-1]').click()
+
+  window.sound = new Audio('wav/switch.wav')
+  sound.play()
+  play_again = ->
+    sound.play()
+  setTimeout(play_again, 1000)
