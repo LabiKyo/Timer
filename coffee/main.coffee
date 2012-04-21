@@ -6,11 +6,12 @@ window.timers =
     current = window.timers.current
     switch current.type
       when '1'
-        current.$toggle.hasClass('active')
+        current.is_counting()
       when '2', '3'
-        current[current.side].$toggle.hasClass('active')
+        current[current.side].is_counting()
 
   stop_current: ->
+    console.info 'stop current'
     if window.timers.current_running()
       window.timers.toggle_current()
 
