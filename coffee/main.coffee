@@ -366,10 +366,10 @@ $ ->
   init_view_two
     title: '反方三辩攻辩正方一、二、四辩'
     label: 'con-2-1'
-    init_time_con: 2 * 1000 # 1 min
+    init_time_con: 60 * 1000 # 1 min
     init_time_pos: 1.5 * 60 * 1000 # 1.5 min
     has_single_pos: true
-    single_time_pos: 2 * 1000 # 20 second
+    single_time_pos: 20 * 1000 # 20 second
     first_side: 'con'
 
   init_view_one
@@ -404,12 +404,6 @@ $ ->
 
   # init nav tabs
   # production
-  #$('a[href=#pos-1-1]').click()
+  $('a[href=#pos-1-1]').click()
   # development
-  $('a[href=#con-2-1]').click()
-
-  window.sound = new Audio('wav/switch.wav')
-  sound.play()
-  play_again = ->
-    sound.play()
-  setTimeout(play_again, 1000)
+  #$('a[href=#con-2-1]').click()
