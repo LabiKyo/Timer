@@ -1,6 +1,6 @@
 window.timers =
   current_running: ->
-    console.log 'current running'
+    #console.info 'current running'
     unless window.timers.current?
       return false
     current = window.timers.current
@@ -15,12 +15,12 @@ window.timers =
       window.timers.toggle_current()
 
   start_current: ->
-    console.log 'start current'
+    #console.info 'start current'
     unless window.timers.current_running()
       window.timers.toggle_current()
 
   toggle_current: ->
-    console.log 'toggle current'
+    #console.info 'toggle current'
     current = window.timers.current
     switch current.type
       when '1'
@@ -29,7 +29,7 @@ window.timers =
         current[current.side].$toggle.click()
 
   save_current: (timer, type, first_side) =>
-    console.log 'save current'
+    #console.info 'save current'
     current = window.timers.current = timer
     current.type = type
     current.side = first_side
@@ -44,7 +44,7 @@ window.timers =
     window.timers.current[window.timers._side_matrix[window.timers.current.side]]
 
   change_side: =>
-    console.log 'change side'
+    #console.info 'change side'
     current = window.timers.current
     single = current["single_#{current.side}"]
     single?.reset(single.init_time)
@@ -83,7 +83,7 @@ on_reset = (e) -> # reset button
       timer.con.$toggle.removeClass('disabled')
 
 on_toggle = (e) -> # toggle button
-  #console.log 'on toggle'
+  #console.info 'on toggle'
   switch timers.current.type
     when '1'
       on_toggle_one(e)
@@ -140,7 +140,7 @@ on_toggle_three = (e) ->
   $target.toggleClass('active')
 
 on_next = (e) -> # next button
-  console.log 'on next'
+  #console.info 'on next'
   e.preventDefault()
   $target = $(e.target)
   label = get_label_from($target)
@@ -150,7 +150,7 @@ on_next = (e) -> # next button
     $next.click()
 
 on_previous = (e) -> # previous button
-  console.log 'on previous'
+  #console.info 'on previous'
   e.preventDefault()
   $target = $(e.target)
   label = get_label_from($target)
@@ -160,7 +160,7 @@ on_previous = (e) -> # previous button
     $previous.click()
 
 on_update = (e) -> # timer update
-  #console.log 'on update'
+  #console.info 'on update'
   @$el?.html(@to_string())
   if @time is 0
     switch window.timers.current.type
@@ -189,9 +189,9 @@ on_change = (e) ->
   timers.start_current()
 
 return_on_show_one = (init_time, label) ->
-  #console.log 'return on show', init_time, label
+  #console.info 'return on show', init_time, label
   (e) ->
-    console.log 'on show one', 'timers.current', timers.current, init_time, label
+    #console.info 'on show one', 'timers.current', timers.current, init_time, label
     timers.stop_current()
     timers[label] ?= new Timer init_time
     timer = timers[label]
@@ -206,9 +206,9 @@ return_on_show_one = (init_time, label) ->
       .trigger 'update' # trigger once to init view
 
 return_on_show_two = (init_time_pos, init_time_con, label, first_side, single_time_pos, single_time_con) ->
-  #console.log 'return on show', init_time, label
+  #console.info 'return on show', init_time, label
   (e) ->
-    console.log 'on show two', 'timers.current', timers.current, init_time_pos, init_time_con, label
+    #console.info 'on show two', 'timers.current', timers.current, init_time_pos, init_time_con, label
     timers.stop_current()
     timers[label] ?=
       pos: new Timer init_time_pos
@@ -255,9 +255,9 @@ return_on_show_two = (init_time_pos, init_time_con, label, first_side, single_ti
       .trigger 'update'
 
 return_on_show_three = (init_time_pos, init_time_con, label, first_side) ->
-  #console.log 'return on show', init_time, label
+  #console.info 'return on show', init_time, label
   (e) ->
-    console.log 'on show three', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
+    #console.info 'on show three', 'timers.current', timers.current, init_time_pos, init_time_con, label, first_side
     timers.stop_current()
     timers[label] ?=
       pos: new Timer init_time_pos
@@ -391,13 +391,13 @@ $ ->
     first_side: 'pos'
 
   init_view_one
-    title: '正方四辩总结陈词'
-    label: 'pos-4'
+    title: '反方四辩总结陈词'
+    label: 'con-4'
     init_time: 4 * 60 * 1000 # 4 min
 
   init_view_one
-    title: '反方四辩总结陈词'
-    label: 'con-4'
+    title: '正方四辩总结陈词'
+    label: 'pos-4'
     init_time: 4 * 60 * 1000 # 4 min
     next: false
 

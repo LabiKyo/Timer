@@ -1,6 +1,6 @@
 class window.Timer
   constructor: (time, on_update) -> # in milliseconds
-    #console.log 'new timer:', time
+    #console.info 'new timer:', time
     @on 'update', on_update
     @reset(time)
 
@@ -23,17 +23,17 @@ class window.Timer
 
   # proxy for event handler
   on: (events, handler) =>
-    #console.log 'on'
+    #console.info 'on'
     $(@).on events, handler
     @
 
   off: () =>
-    #console.log 'off'
+    #console.info 'off'
     $(@).off events, handler
     @
 
   trigger: (events) =>
-    #console.log 'trigger', events
+    #console.info 'trigger', events
     $(@).trigger events
     @
 
@@ -46,13 +46,13 @@ class window.Timer
       @trigger 'update'
 
   start: =>
-    console.log 'start'
+    #console.info 'start'
     if @time > 0
       @id = setInterval(@_count_down, @_interval)
       #@trigger 'start.timer'
 
   stop: =>
-    console.log 'stop'
+    #console.info 'stop'
     if @id
       clearInterval(@id)
       @id = undefined
