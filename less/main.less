@@ -4,6 +4,15 @@
   text-shadow: 1px 1px 1px @grayLight;
 }
 
+.border-radius-bottom(@radius: 5px) {
+  -moz-border-radius-topleft: 0;
+  -moz-border-radius-topright: 0;
+  -moz-border-radius-bottomright: @radius;
+  -moz-border-radius-bottomleft: @radius;
+  -webkit-border-radius: 0 0 @radius @radius;
+  border-radius: 0 0 @radius @radius;
+}
+
 .hide {
   display: none;
 }
@@ -24,8 +33,23 @@ header, footer {
 header {
   padding: 10px 0 30px;
   h1 {
-    font-size: 44px;
+    font-size: 36px;
     .text-shadow();
+  }
+  .row-fluid {
+    line-height: 40px;
+    font-size: 24px;
+  }
+  .settings {
+    .border-radius-bottom();
+    background: #ccc;
+    padding: 5px 10px;
+    position: fixed;
+    top: 0;
+    right: 10%;
+  }
+  .settings:hover {
+    text-decoration: none;
   }
 }
 
@@ -34,6 +58,17 @@ header {
   padding: 20px;
   h2 {
     padding-bottom: 20px;
+  }
+  #settings {
+    label {
+      font-size: 16px;
+    }
+    .controls {
+      text-align: left;
+    }
+    a.save {
+      width: 2 * @fluidGridColumnWidth + @fluidGridGutterWidth;
+    }
   }
   .tab-pane {
     .hero-unit {

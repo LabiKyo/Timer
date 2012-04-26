@@ -53,6 +53,19 @@ window.timers =
     current["single_#{current.side}"]?.reset()
     current.side = window.timers._side_matrix[current.side]
 
+init_settings = ->
+  storage = window.localStorage
+  settings = window.settings =
+    title: storage.getItem('title') or '中国矿业大学（北京）第八届校园辩论赛'
+    pos: storage.getItem('pos') or '正方队名'
+    con: storage.getItem('con') or '反方队名'
+  $('#input-title').val settings.title
+  $('#input-pos').val settings.pos
+  $('#input-con').val settings.con
+  $('#title').html settings.title
+  $('#name-pos').html settings.pos
+  $('#name-con').html settings.con
+
 extend_timer = (timer, label, side, is_single) ->
   #console.info 'extend timer', timer, label, side, is_single
   _(timer).extend
@@ -332,6 +345,9 @@ $ ->
     .on('click', '.btn.previous', on_previous)
     .on('click', '.btn.switch', on_switch)
 
+  $('a.settings').on 'click', ->
+    $('.tabbable li.active').removeClass('active')
+
   # init view
   init_view_one
     title: '正方一辩破题立论'
@@ -402,8 +418,10 @@ $ ->
     init_time: 4 * 60 * 1000 # 4 min
     next: false
 
+  init_settings()
+
   # init nav tabs
   # production
-  $('a[href=#pos-1-1]').click()
+  #$('a[href=#pos-1-1]').click()
   # development
-  #$('a[href=#con-2-1]').click()
+  $('a[href=#settings]').click()

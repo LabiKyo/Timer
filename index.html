@@ -3,16 +3,25 @@
 <head>
   <title>中国矿业大学（北京）第八届校园辩论赛</title>
   <!-- development
+  -->
   <link rel="stylesheet/less" type="text/css" href="less/main.less">
-  -->
   <!-- production
-  -->
   <link rel="stylesheet" href="css/main.css">
+  -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 </head>
 <body>
-  <header class="container-fluid"><h1>中国矿业大学（北京）第八届校园辩论赛</h1></header>
+  <header class="container-fluid">
+    <h1 id="title">中国矿业大学（北京）第八届校园辩论赛</h1>
+    <div class="row-fluid">
+      <div class="span6">正方：<span id="name-pos"></span></div>
+      <div class="span6">反方：<span id="name-con"></span></div>
+    </div>
+    <div class="tabbale">
+      <a class="settings" href="#settings" data-toggle="tab">设置</a>
+    </div>
+  </header>
 
   <section id="application" class="container-fluid">
     <div class="row-fluid">
@@ -36,6 +45,34 @@
         </ul>
       </nav>
       <div class="span8 tab-content main-pane">
+        <section class="tab-pane" id="settings">
+          <h2>设置</h2>
+          <form class="row-fluid clearfix form-horizontal">
+            <fieldset>
+              <div class="control-group">
+                <label class="control-label" for="input-title">辩题：</label>
+                <div class="controls">
+                  <input class="span6" type="text" id="input-title"/>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="input-pos">正方：</label>
+                <div class="controls">
+                  <input class="span6" type="text" id="input-pos"/>
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label" for="input-con">反方：</label>
+                <div class="controls">
+                  <input class="span6" type="text" id="input-con"/>
+                </div>
+              </div>
+              <div class="control-group">
+                <a href="#" class="save btn btn-primary btn-large">保存</a>
+              </div>
+            </div>
+          </fieldset>
+        </section>
       </div>
     </div>
   </section>
@@ -123,15 +160,15 @@
   <script src="js/underscore-1.3.1.js"></script>
   <script src="js/backbone-0.9.1.js"></script>
   <script src="js/bootstrap-tab.js"></script>
-  <!-- development
   <script src="js/coffee-script.js"></script>
   <script src="js/less-1.3.0.min.js"></script>
   <script src="coffee/timer.coffee" type="text/coffeescript"></script>
   <script src="coffee/main.coffee" type="text/coffeescript"></script>
+  <!-- development
   -->
   <!-- production
-  -->
   <script src="js/timer.js"></script>
   <script src="js/main.js"></script>
+  -->
 </body>
 </html>
