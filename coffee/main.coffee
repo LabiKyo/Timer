@@ -55,16 +55,33 @@ window.timers =
 
 init_settings = ->
   storage = window.localStorage
-  settings = window.settings =
+  s = window.settings =
+    $input_title: $ '#input-title'
+    $title: $ '#title'
     title: storage.getItem('title') or '中国矿业大学（北京）第八届校园辩论赛'
+    $input_pos: $ '#input-pos'
+    $pos: $ '#name-pos'
     pos: storage.getItem('pos') or '正方队名'
+    $input_con: $ '#input-con'
+    $con: $ '#name-con'
     con: storage.getItem('con') or '反方队名'
-  $('#input-title').val settings.title
-  $('#input-pos').val settings.pos
-  $('#input-con').val settings.con
-  $('#title').html settings.title
-  $('#name-pos').html settings.pos
-  $('#name-con').html settings.con
+  s.$input_title.val s.title
+  s.$input_pos.val s.pos
+  s.$input_con.val s.con
+  render_settings()
+
+update_settings = ->
+  s = window.settings
+  storage = window.localStorage
+  storage.title = s.title = s.$input_title.val()
+  storage.pos = s.pos = s.$input_pos.val()
+  storage.con = s.con = s.$input_con.val()
+
+render_settings = ->
+  s = window.settings
+  s.$title.html s.title
+  s.$pos.html s.pos
+  s.$con.html s.con
 
 extend_timer = (timer, label, side, is_single) ->
   #console.info 'extend timer', timer, label, side, is_single
@@ -348,6 +365,11 @@ $ ->
   $('a.settings').on 'click', ->
     $('.tabbable li.active').removeClass('active')
 
+  $('#settings a.save').on 'click', (e) ->
+    e.preventDefault()
+    update_settings()
+    render_settings()
+
   # init view
   init_view_one
     title: '正方一辩破题立论'
@@ -422,6 +444,6 @@ $ ->
 
   # init nav tabs
   # production
-  #$('a[href=#pos-1-1]').click()
+  $('a[href=#pos-1-1]').click()
   # development
-  $('a[href=#settings]').click()
+  #$('a[href=#settings]').click()
