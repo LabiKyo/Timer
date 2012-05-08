@@ -373,77 +373,44 @@ $ ->
   # init view
   init_view_one
     title: '正方一辩破题立论'
-    label: 'pos-1-1'
+    label: 'pos-1'
     previous: false
-    init_time: 3 * 60 * 1000 # 3 min
-
-  init_view_one
-    title: '反方二辩盘问正方一辩'
-    label: 'con-1-2'
     init_time: 2 * 60 * 1000 # 2 min
 
   init_view_one
     title: '反方一辩破题立论'
-    label: 'con-1-1'
-    init_time: 3 * 60 * 1000 # 3 min
-
-  init_view_one
-    title: '正方二辩盘问反方一辩'
-    label: 'pos-1-2'
+    label: 'con-1'
     init_time: 2 * 60 * 1000 # 2 min
 
-  init_view_two
-    title: '正方三辩攻辩反方一、二、四辩'
-    label: 'pos-2-1'
-    init_time_pos: 60 * 1000 # 1 min
-    init_time_con: 1.5 * 60 * 1000 # 1.5 min
-    has_single_con: true
-    single_time_con: 20 * 1000 # 20 second
-    first_side: 'pos'
-
-  init_view_two
-    title: '反方三辩攻辩正方一、二、四辩'
-    label: 'con-2-1'
-    init_time_con: 60 * 1000 # 1 min
+  init_view_three
+    title: '二辩对辩'
+    label: '2'
     init_time_pos: 1.5 * 60 * 1000 # 1.5 min
-    has_single_pos: true
-    single_time_pos: 20 * 1000 # 20 second
-    first_side: 'con'
-
-  init_view_one
-    title: '正方三辩攻辩小结'
-    label: 'pos-2-2'
-    init_time: 1.5 * 60 * 1000 # 1.5 min
-
-  init_view_one
-    title: '反方三辩攻辩小结'
-    label: 'con-2-2'
-    init_time: 1.5 * 60 * 1000 # 1.5 min
+    init_time_con: 1.5 * 60 * 1000 # 1.5 min
+    first_side: 'pos'
 
   init_view_three
     title: '自由辩论'
     label: '3'
-    #init_time_pos: 2 * 1000 # 5 min
-    #init_time_con: 2 * 1000 # 5 min
-    init_time_pos: 5 * 60 * 1000 # 5 min
-    init_time_con: 5 * 60 * 1000 # 5 min
+    init_time_pos: 3.5 * 60 * 1000 # 3.5 min
+    init_time_con: 3.5 * 60 * 1000 # 3.5 min
     first_side: 'pos'
 
   init_view_one
     title: '反方四辩总结陈词'
     label: 'con-4'
-    init_time: 4 * 60 * 1000 # 4 min
+    init_time: 3 * 60 * 1000 # 3 min
 
   init_view_one
     title: '正方四辩总结陈词'
     label: 'pos-4'
-    init_time: 4 * 60 * 1000 # 4 min
+    init_time: 3 * 60 * 1000 # 3 min
     next: false
 
   init_settings()
 
   # init nav tabs
   # production
-  $('a[href=#pos-1-1]').click()
+  $('a[href=#pos-1]').click()
   # development
   #$('a[href=#settings]').click()
